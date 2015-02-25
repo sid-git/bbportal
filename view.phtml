@@ -1,0 +1,965 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Product view template
+ *
+ * @see Mage_Catalog_Block_Product_View
+ * @see Mage_Review_Block_Product_View
+ */
+?>
+<?php $_helper = $this->helper('catalog/output'); ?>
+<?php $_product = $this->getProduct(); ?>
+
+<?php if($_product->getId()=='1'){ ?>
+<script type="text/javascript">
+    var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+</script>
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+
+
+<!-- Hidden form part-->
+<form action="<?php echo $this->getSubmitUrl($_product) ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+    <input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+    <input type="hidden" name="related_product" id="related-products-field" value="" />
+
+
+
+<!--left part-->
+<div class="eight columns leftpart alpha">
+	<?php echo $this->getChildHtml('media') ?>
+   <div style="margin-top:450px; padding:15px; background:#fff; width:300px;"><h3 style="color:#714797;">Description</h3><?php echo $_product->getDescription(); ?></div>
+</div><!--left part-->
+
+<!--right part-->
+<div class="eight columns rightpart omega">
+               			<!-- Product Title -->
+	<?php $proname=$_helper->productAttribute($_product, $_product->getName(), 'name');
+	
+	$proname=explode("24",$proname);
+	
+	 ?>
+     <div class="pretitle"><?php echo $proname[0]; ?></div>
+     <?php if($proname[1]){ ?><div class="lasttitle">24 <?php echo $proname[1]; ?></div><?php } ?>
+    
+
+<div class="rightpart2">
+    
+
+ <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+            <?php echo $this->getChildChildHtml('container2', '', true, true) ?>
+        <?php endif;?> 
+
+        <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+            <?php echo $this->getChildChildHtml('container1', '', true, true) ?>
+        <?php endif;?>
+
+<?php // if (!$this->hasOptions()):?>
+        <div class="add-to-box clearfix">
+            <div class="pricecontainer"><?=$this->getChildHtml('product_type_data')?></div>
+            <?php if($_product->isSaleable()): ?>
+                <?php echo $this->getChildHtml('addtocart') ?>
+            <?php endif; ?>
+        </div>
+        <?php echo $this->getChildHtml('extra_buttons') ?>
+    <?php //endif; ?>  
+    <!-- End add to cart-->
+    <style>#select_8,#select_15,#options_4_text{width:auto;}
+	dl dd{ width:100%;}
+    ul.tabs li a {padding: 10px 3px;font-size: 13px;}
+    </style>
+    
+    
+    <script>
+    
+      // When the document loads do everything inside here ...
+      jQuery(document).ready(function(){
+        
+        // When a link is clicked
+        jQuery("a.tab").click(function () {
+            
+            // switch all tabs off
+            jQuery(".active").removeClass("active");
+            
+            // switch this tab on
+            jQuery(this).addClass("active");
+            
+            // slide all elements with the class 'content' up
+            jQuery(".tabcontent").slideUp();
+            
+            // Now figure out what the 'title' attribute value is and find the element with that id.  Then slide that down.
+            var content_show = jQuery(this).attr("title");
+            jQuery("#"+content_show).slideDown();
+
+        });
+		
+		
+		
+		jQuery('#options_3_2').click(function(){
+			jQuery('#options_4_text').attr('readonly', true);
+			jQuery('#options_4_text').val('0000');
+			jQuery('#options_4_text').css('background','#ddd');
+			jQuery('#options_9_2').attr('disabled', '');
+			jQuery('#options_9_3').attr('disabled', '');
+			jQuery('#options_9_2').prop('checked', false);
+			jQuery('#options_9_3').prop('checked', false);
+			jQuery('#options_9_4').prop('checked', true);
+			});
+		jQuery('#options_3_3').click(function(){
+			jQuery('#options_4_text').attr('readonly', false);
+			jQuery('#options_4_text').val('');
+			jQuery('#options_4_text').css('background','#fff');
+			jQuery('#options_9_2').removeAttr('disabled');
+			jQuery('#options_9_3').removeAttr('disabled');
+			jQuery('#options_9_4').prop('checked', false);
+			});
+		jQuery('#options-9-list span.price').append(" Licensing Fee");
+		//jQuery('#select_15').val(21);
+		//jQuery('#select_8').css('width','250px');
+		
+		jQuery('#select_8').change(function(){
+			if(jQuery('#select_8').val()==37){
+				jQuery('#select_16').val(24);
+			}
+			if(jQuery('#select_8').val()==38){
+				jQuery('#select_16').val(25);
+			}
+			if(jQuery('#select_8').val()==34){
+				jQuery('#select_16').val(25);
+			}
+			
+			
+			});
+		
+		jQuery('.rightpart2 dl.clearfix dd.last').hide();
+		jQuery('.rightpart2 dl.clearfix dd.last').prev().hide();
+    	jQuery('#options_4_text').change(function(){
+			if(jQuery('#options_4_text').val().length>10){
+				alert('Sorry, the Mobile Number should follow this format: 04xxxxxxxx');	
+				jQuery('#options_4_text').val('');
+			}
+			
+			});
+			
+		//jQuery('#select_15').after("<span style='font-size:12px'>&nbsp;&nbsp;(Provided by Simple iD)</span>");
+      });
+  </script>
+
+		<p><em>(All prices quoted are INC GST)</em></p>
+		<ul class="tabs clearfix">
+        <li><a href="JavaScript:void(0);" title="content_1" class="tab active">Mobile Plan</a></li>
+        <li><a href="JavaScript:void(0);" title="content_2" class="tab">Email Hosting</a></li>
+        <!--<li><a href="JavaScript:void(0);" title="content_3" class="tab">Z10 Handset</a></li>
+        <li><a href="JavaScript:void(0);" title="content_4" class="tab">Q10 Handset</a></li>-->
+        <li><a href="JavaScript:void(0);" title="content_5" class="tab">Z30 Handset</a></li>
+        <li><a href="JavaScript:void(0);" title="content_6" class="tab">Terms & Conditions</a></li>
+        <li><a href="JavaScript:void(0);" title="content_7" class="tab">Critical Info</a></li>
+        
+    </ul>
+
+        <div id="content_1" class="tabcontent">
+            	<?php	echo $_product->getData('theplan'); ?>
+        </div>
+        <div id="content_2" class="tabcontent">
+            	<?php	echo $_product->getData('emailplan'); ?>
+        </div>
+       <!-- <div id="content_3" class="tabcontent">      
+        		<?php	echo $_product->getData('handset');
+				//$attributeCode = 'handset';
+//				$products = Mage::getResourceModel('catalog/product_collection')
+//						->addAttributeToFilter($attributeCode, array('notnull' => true))
+//						->addAttributeToFilter($attributeCode, array('neq' => ''))
+//						->addAttributeToSelect($attributeCode);
+//				$usedAttributeValues = array_unique($products->getColumnValues($attributeCode)); echo $usedAttributeValues[0]; ?>
+        </div>
+        <div id="content_4" class="tabcontent">      
+        		<?php	echo $_product->getData('handset2'); ?>
+        </div>-->
+        <div id="content_5" class="tabcontent" style="display:none">      
+        		<?php	echo $_product->getData('handset3'); ?>
+        </div>
+        <div id="content_6" class="tabcontent" style="display:none">
+           		<?php	echo $_product->getData('termsconditions'); ?>	
+        </div>
+        <div id="content_7" class="tabcontent" style="display:none">
+           		<?php	echo $_product->getData('criticalinfo'); ?>
+        </div>
+
+
+
+
+    <!-- Add to cart & Compare & Wishlist & Email -->
+   	
+    
+       
+</form>
+
+
+		
+
+
+	<!-- Short Description -->
+
+	
+	 
+    <hr class="addtocart">
+    <?php /*?><div class="addtobuttons clearfix">
+        <?php if( $this->helper('wishlist')->isAllow() || $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($_product)): ?>
+            <?php echo $this->getChildHtml('addto') ?>
+        <?php endif; ?>
+
+        <?php if ($this->canEmailToFriend()): ?>
+        <a href="<?php echo $this->helper('catalog/product')->getEmailToFriendUrl($_product) ?>"><?php echo $this->__('Email to a Friend') ?></a>
+        <?php endif; ?>                    
+    </div><?php */?>
+    <div class="addthisbuttons">
+        <!-- AddThis Button BEGIN -->
+        <div class="addthis_toolbox addthis_default_style ">
+            <a class="addthis_counter addthis_bubble_style"></a>
+            <a class="addthis_button_compact"></a>
+            <a class="addthis_button_preferred_4"></a>
+            <a class="addthis_button_preferred_3"></a>
+            <a class="addthis_button_preferred_2"></a>
+            <a class="addthis_button_preferred_1"></a>        
+        </div>
+        <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-5015513b7ccde36a"></script>
+        <!-- AddThis Button END -->
+    </div>  
+</div><!-- right part 2 -->
+
+
+
+
+
+
+</div><!--right part-->
+
+           
+
+            <?php //echo $this->getReviewsSummaryHtml($_product, false, true)?>
+            <?php //echo $this->getChildHtml('alert_urls') ?>
+            <?php //echo $this->getChildHtml('product_type_data') ?>
+            <?php //echo $this->getTierPriceHtml() ?>
+            <?php //echo $this->getChildHtml('extrahint') ?>
+
+
+
+
+            <?php echo $this->getChildHtml('other');?>
+
+              
+	
+
+
+
+<div class="clear"></div>
+
+
+
+<?php /*?><div class="sixteen columns details omega">
+    
+    <?php foreach ($this->getChildGroup('detailed_info', 'getChildHtml') as $alias => $html):?>
+    
+
+                <?php if ($title = $this->getChildData($alias, 'title')):?>
+                <h2><?php echo $this->escapeHtml($title); ?></h2>
+                <?php endif;?>
+
+                    <?  $tit = explode('<h4>',$html);
+                        $tit = explode('</h4>',$tit[1]);
+                        $tit = str_replace(' ','-',$tit[0]);
+                        //echo $tit;
+                if($tit == 'Details'){
+                    echo $html;
+                }
+
+               
+    endforeach;?>
+
+    
+    <?php echo $this->getChildHtml('upsell_products') ?>
+    <?php echo $this->getChildHtml('RelatedProd') ?>
+    
+</div>
+<?php */?>
+
+
+<!--===========================-->
+<!--======== Scripts ==========-->
+<!--===========================-->
+
+    <script type="text/javascript">
+    //<![CDATA[
+        var productAddToCartForm = new VarienForm('product_addtocart_form');
+        productAddToCartForm.submit = function(button, url) {
+            if (this.validator.validate()) {
+                var form = this.form;
+                var oldUrl = form.action;
+
+                if (url) {
+                   form.action = url;
+                }
+                var e = null;
+                try {
+                    this.form.submit();
+                } catch (e) {
+                }
+                this.form.action = oldUrl;
+                if (e) {
+                    throw e;
+                }
+
+                if (button && button != 'undefined') {
+                    button.disabled = true;
+                }
+            }
+        }.bind(productAddToCartForm);
+
+        productAddToCartForm.submitLight = function(button, url){
+            if(this.validator) {
+                var nv = Validation.methods;
+                delete Validation.methods['required'];
+                delete Validation.methods['required-entry'];
+                delete Validation.methods['validate-one-required'];
+                delete Validation.methods['validate-one-required-by-name'];
+                // Remove custom datetime validators
+                for (var methodName in Validation.methods) {
+                    if (methodName.match(/^validate-datetime-.*/i)) {
+                        delete Validation.methods[methodName];
+                    }
+                }
+
+                if (this.validator.validate()) {
+                    if (url) {
+                        this.form.action = url;
+                    }
+                    this.form.submit();
+                }
+                Object.extend(Validation.methods, nv);
+            }
+        }.bind(productAddToCartForm);
+    //]]>
+    </script>
+
+<?php  }  ?>
+<!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+<?php if($_product->getId()=='3'){ ?>
+<script type="text/javascript">
+    var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+</script>
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+
+
+<!-- Hidden form part-->
+<form action="<?php echo $this->getSubmitUrl($_product) ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+    <input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+    <input type="hidden" name="related_product" id="related-products-field" value="" />
+
+
+<!--left part-->
+<div class="eight columns leftpart alpha">
+	<?php echo $this->getChildHtml('media') ?>
+    <div style="margin-top:418px; padding:15px; background:#fff; width:300px;"><h3 style="color:#714797;">Description</h3><?php echo $_product->getDescription(); ?></div>
+</div><!--left part-->
+
+<!--right part-->
+<div class="eight columns rightpart omega">
+               			<!-- Product Title -->
+	<?php $proname=$_helper->productAttribute($_product, $_product->getName(), 'name');
+	
+	$proname=explode("24",$proname);
+	
+	 ?>
+     <div class="pretitle"><?php echo $proname[0]; ?></div>
+     <?php if($proname[1]){ ?><div class="lasttitle">24 <?php echo $proname[1]; ?></div><?php } ?>
+    
+
+<div class="rightpart2">
+   
+    
+
+
+ <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+            <?php echo $this->getChildChildHtml('container2', '', true, true) ?>
+        <?php endif;?> 
+
+        <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+            <?php echo $this->getChildChildHtml('container1', '', true, true) ?>
+        <?php endif;?>
+
+
+<?php // if (!$this->hasOptions()):?>
+        <div class="add-to-box clearfix">
+            <div class="pricecontainer"><?=$this->getChildHtml('product_type_data')?></div>
+            <?php if($_product->isSaleable()): ?>
+                <?php echo $this->getChildHtml('addtocart') ?>
+            <?php endif; ?>
+        </div>
+        <?php echo $this->getChildHtml('extra_buttons') ?>
+    <?php //endif; ?>  
+    <!-- End add to cart-->
+	<style>#select_10,#options_14_text{width:auto;} 
+    dl dd{ width:100%;}</style>
+    <script>
+     
+      // When the document loads do everything inside here ...
+      jQuery(document).ready(function(){
+        
+        // When a link is clicked
+        jQuery("a.tab").click(function () {
+            
+            // switch all tabs off
+            jQuery(".active").removeClass("active");
+            
+            // switch this tab on
+            jQuery(this).addClass("active");
+            
+            // slide all elements with the class 'content' up
+            jQuery(".tabcontent").slideUp();
+            
+            // Now figure out what the 'title' attribute value is and find the element with that id.  Then slide that down.
+            var content_show = jQuery(this).attr("title");
+            jQuery("#"+content_show).slideDown();
+          
+        });
+		
+		jQuery('#options_12_2').click(function(){
+			jQuery('#options_14_text').attr('readonly', true);
+			jQuery('#options_14_text').val('0000');
+			jQuery('#options_14_text').css('background','#ddd');
+			jQuery('#options_13_2').attr('disabled', '');
+			jQuery('#options_13_3').attr('disabled', '');
+			jQuery('#options_13_2').prop('checked', false);
+			jQuery('#options_13_3').prop('checked', false);
+			jQuery('#options_13_4').prop('checked', true);
+			});
+		jQuery('#options_12_3').click(function(){
+			jQuery('#options_14_text').attr('readonly', false);
+			jQuery('#options_14_text').val('');
+			jQuery('#options_14_text').css('background','#fff');
+			jQuery('#options_13_2').removeAttr('disabled');
+			jQuery('#options_13_3').removeAttr('disabled');
+			jQuery('#options_13_4').prop('checked', false);
+			});
+   		 jQuery('#options_14_text').change(function(){
+			if(jQuery('#options_14_text').val().length>10){
+				alert('Sorry, the Mobile Number should follow this format: 04xxxxxxxx');	
+				jQuery('#options_14_text').val('');
+			}
+			
+			});
+      });
+  </script>
+  <style>label[for=options_13_4], #options_13_4 {
+display: none;
+}</style>
+		<p><em>(All prices quoted are INC GST)</em></p>
+		<ul class="tabs clearfix">
+        
+        <li><a href="JavaScript:void(0);" title="content_1" class="tab active">Value Plan</a></li>
+        <li><a href="JavaScript:void(0);" title="content_2" class="tab">Standard Plan</a></li>
+        <li><a href="JavaScript:void(0);" title="content_3" class="tab">The Handset</a></li>
+        <li><a href="JavaScript:void(0);" title="content_4" class="tab">Terms & Conditions</a></li>
+        <li><a href="JavaScript:void(0);" title="content_5" class="tab">Critical Info</a></li>
+        
+    </ul>
+
+        
+        <div id="content_1" class="tabcontent">      
+        		<?php	echo $_product->getData('handset');
+				//$attributeCode = 'handset';
+//				$products = Mage::getResourceModel('catalog/product_collection')
+//						->addAttributeToFilter($attributeCode, array('notnull' => true))
+//						->addAttributeToFilter($attributeCode, array('neq' => ''))
+//						->addAttributeToSelect($attributeCode);
+//				$usedAttributeValues = array_unique($products->getColumnValues($attributeCode)); echo $usedAttributeValues[0]; ?>
+        </div>
+        <div id="content_2" class="tabcontent">      
+        		<?php	echo $_product->getData('handset2'); ?>
+        </div>
+        <div id="content_3" class="tabcontent">
+            	<?php	echo $_product->getData('theplan'); ?>
+        </div>
+        <div id="content_4" class="tabcontent">
+           		<?php	echo $_product->getData('termsconditions'); ?>	
+        </div>
+        <div id="content_5" class="tabcontent"  style="display:none">
+        
+       			 <?php	echo $_product->getData('criticalinfo'); ?>
+           		
+        </div>
+
+
+
+    <!-- Add to cart & Compare & Wishlist & Email -->
+   	
+    
+       
+</form>
+
+		
+
+
+	<!-- Short Description -->
+
+	
+	 
+    <hr class="addtocart">
+    <?php /*?><div class="addtobuttons clearfix">
+        <?php if( $this->helper('wishlist')->isAllow() || $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($_product)): ?>
+            <?php echo $this->getChildHtml('addto') ?>
+        <?php endif; ?>
+
+        <?php if ($this->canEmailToFriend()): ?>
+        <a href="<?php echo $this->helper('catalog/product')->getEmailToFriendUrl($_product) ?>"><?php echo $this->__('Email to a Friend') ?></a>
+        <?php endif; ?>                    
+    </div><?php */?>
+    <div class="addthisbuttons">
+        <!-- AddThis Button BEGIN -->
+        <div class="addthis_toolbox addthis_default_style ">
+            <a class="addthis_counter addthis_bubble_style"></a>
+            <a class="addthis_button_compact"></a>
+            <a class="addthis_button_preferred_4"></a>
+            <a class="addthis_button_preferred_3"></a>
+            <a class="addthis_button_preferred_2"></a>
+            <a class="addthis_button_preferred_1"></a>        
+        </div>
+        <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-5015513b7ccde36a"></script>
+        <!-- AddThis Button END -->
+    </div>  
+</div><!-- right part 2 -->
+
+
+
+
+
+
+</div><!--right part-->
+
+           
+
+            <?php //echo $this->getReviewsSummaryHtml($_product, false, true)?>
+            <?php //echo $this->getChildHtml('alert_urls') ?>
+            <?php //echo $this->getChildHtml('product_type_data') ?>
+            <?php //echo $this->getTierPriceHtml() ?>
+            <?php //echo $this->getChildHtml('extrahint') ?>
+
+
+
+
+            <?php echo $this->getChildHtml('other');?>
+
+              
+	
+
+
+
+<div class="clear"></div>
+
+
+
+<?php /*?><div class="sixteen columns details omega">
+    
+    <?php foreach ($this->getChildGroup('detailed_info', 'getChildHtml') as $alias => $html):?>
+    
+
+                <?php if ($title = $this->getChildData($alias, 'title')):?>
+                <h2><?php echo $this->escapeHtml($title); ?></h2>
+                <?php endif;?>
+
+                    <?  $tit = explode('<h4>',$html);
+                        $tit = explode('</h4>',$tit[1]);
+                        $tit = str_replace(' ','-',$tit[0]);
+                        //echo $tit;
+                if($tit == 'Details'){
+                    echo $html;
+                }
+
+               
+    endforeach;?>
+
+    
+    <?php echo $this->getChildHtml('upsell_products') ?>
+    <?php echo $this->getChildHtml('RelatedProd') ?>
+    
+</div>
+<?php */?>
+
+
+<!--===========================-->
+<!--======== Scripts ==========-->
+<!--===========================-->
+
+    <script type="text/javascript">
+    //<![CDATA[
+        var productAddToCartForm = new VarienForm('product_addtocart_form');
+        productAddToCartForm.submit = function(button, url) {
+            if (this.validator.validate()) {
+                var form = this.form;
+                var oldUrl = form.action;
+
+                if (url) {
+                   form.action = url;
+                }
+                var e = null;
+                try {
+                    this.form.submit();
+                } catch (e) {
+                }
+                this.form.action = oldUrl;
+                if (e) {
+                    throw e;
+                }
+
+                if (button && button != 'undefined') {
+                    button.disabled = true;
+                }
+            }
+        }.bind(productAddToCartForm);
+
+        productAddToCartForm.submitLight = function(button, url){
+            if(this.validator) {
+                var nv = Validation.methods;
+                delete Validation.methods['required'];
+                delete Validation.methods['required-entry'];
+                delete Validation.methods['validate-one-required'];
+                delete Validation.methods['validate-one-required-by-name'];
+                // Remove custom datetime validators
+                for (var methodName in Validation.methods) {
+                    if (methodName.match(/^validate-datetime-.*/i)) {
+                        delete Validation.methods[methodName];
+                    }
+                }
+
+                if (this.validator.validate()) {
+                    if (url) {
+                        this.form.action = url;
+                    }
+                    this.form.submit();
+                }
+                Object.extend(Validation.methods, nv);
+            }
+        }.bind(productAddToCartForm);
+    //]]>
+    </script>
+
+<?php  }  ?>
+<!---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+<?php if($_product->getId()=='7'){ ?>
+<script type="text/javascript">
+    var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+</script>
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+
+
+<!-- Hidden form part-->
+<form action="<?php echo $this->getSubmitUrl($_product) ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+    <input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+    <input type="hidden" name="related_product" id="related-products-field" value="" />
+
+
+<!--left part-->
+<div class="eight columns leftpart alpha">
+	<?php echo $this->getChildHtml('media') ?>
+    <div style="margin-top:418px; padding:15px; background:#fff; width:300px;"><h3 style="color:#714797;">Description</h3><?php echo $_product->getDescription(); ?></div>
+</div><!--left part-->
+
+<!--right part-->
+<div class="eight columns rightpart omega">
+               			<!-- Product Title -->
+	<?php $proname=$_helper->productAttribute($_product, $_product->getName(), 'name');
+	
+	$proname=explode("24",$proname);
+	
+	 ?>
+     <div class="pretitle"><?php echo $proname[0]; ?></div>
+     <?php if($proname[1]){ ?><div class="lasttitle">24 <?php echo $proname[1]; ?></div><?php } ?>
+    
+
+<div class="rightpart2">
+   
+    
+
+
+ <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+            <?php echo $this->getChildChildHtml('container2', '', true, true) ?>
+        <?php endif;?> 
+
+        <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+            <?php echo $this->getChildChildHtml('container1', '', true, true) ?>
+        <?php endif;?>
+
+
+<?php // if (!$this->hasOptions()):?>
+        <div class="add-to-box clearfix">
+            <div class="pricecontainer"><?=$this->getChildHtml('product_type_data')?></div>
+            <?php if($_product->isSaleable()): ?>
+                <?php echo $this->getChildHtml('addtocart') ?>
+            <?php endif; ?>
+        </div>
+        <?php echo $this->getChildHtml('extra_buttons') ?>
+    <?php //endif; ?>  
+    <!-- End add to cart-->
+	<style>#select_21,#options_20_text{width:auto;} 
+    dl dd{ width:100%;}</style>
+    <script>
+     
+      // When the document loads do everything inside here ...
+      jQuery(document).ready(function(){
+        
+        // When a link is clicked
+        jQuery("a.tab").click(function () {
+            
+            // switch all tabs off
+            jQuery(".active").removeClass("active");
+            
+            // switch this tab on
+            jQuery(this).addClass("active");
+            
+            // slide all elements with the class 'content' up
+            jQuery(".tabcontent").slideUp();
+            
+            // Now figure out what the 'title' attribute value is and find the element with that id.  Then slide that down.
+            var content_show = jQuery(this).attr("title");
+            jQuery("#"+content_show).slideDown();
+          
+        });
+		
+		jQuery('#options_19_2').click(function(){
+			jQuery('#options_20_text').attr('readonly', true);
+			jQuery('#options_20_text').val('0000');
+			jQuery('#options_20_text').css('background','#ddd');
+
+			});
+		jQuery('#options_19_3').click(function(){
+			jQuery('#options_20_text').attr('readonly', false);
+			jQuery('#options_20_text').val('');
+			jQuery('#options_20_text').css('background','#fff');
+			});
+   		 jQuery('#options_20_text').change(function(){
+			if(jQuery('#options_20_text').val().length>10){
+				alert('Sorry, the Mobile Number should follow this format: 04xxxxxxxx');	
+				jQuery('#options_20_text').val('');
+			}
+			
+			});
+      });
+  </script>
+		<p><em>(All prices quoted are INC GST)</em></p>
+		<ul class="tabs clearfix">
+        
+        <li><a href="JavaScript:void(0);" title="content_1" class="tab active">Value Plan</a></li>
+        <li><a href="JavaScript:void(0);" title="content_2" class="tab">Value Plus Plan</a></li>
+        <li><a href="JavaScript:void(0);" title="content_3" class="tab">PAYG Plan</a></li>
+        <li><a href="JavaScript:void(0);" title="content_4" class="tab">The Handset</a></li>
+        <li><a href="JavaScript:void(0);" title="content_5" class="tab">Terms & Conditions</a></li>
+        <li><a href="JavaScript:void(0);" title="content_6" class="tab">Critical Info</a></li>
+        
+    </ul>
+
+        
+        <div id="content_1" class="tabcontent">      
+        		<?php	echo $_product->getData('handset');
+				//$attributeCode = 'handset';
+//				$products = Mage::getResourceModel('catalog/product_collection')
+//						->addAttributeToFilter($attributeCode, array('notnull' => true))
+//						->addAttributeToFilter($attributeCode, array('neq' => ''))
+//						->addAttributeToSelect($attributeCode);
+//				$usedAttributeValues = array_unique($products->getColumnValues($attributeCode)); echo $usedAttributeValues[0]; ?>
+        </div>
+         <div id="content_2" class="tabcontent">      
+        		<?php	echo $_product->getData('emailplan'); ?>
+        </div>
+        <div id="content_3" class="tabcontent">      
+        		<?php	echo $_product->getData('handset2'); ?>
+        </div>
+        <div id="content_4" class="tabcontent">
+            	<?php	echo $_product->getData('theplan'); ?>
+        </div>
+        <div id="content_5" class="tabcontent"  style="display:none">
+           		<?php	echo $_product->getData('termsconditions'); ?>	
+        </div>
+        <div id="content_6" class="tabcontent"  style="display:none">
+        
+       			 <?php	echo $_product->getData('criticalinfo'); ?>
+           		
+        </div>
+
+
+
+    <!-- Add to cart & Compare & Wishlist & Email -->
+   	
+    
+       
+</form>
+
+		
+
+
+	<!-- Short Description -->
+
+	
+	 
+    <hr class="addtocart">
+    <?php /*?><div class="addtobuttons clearfix">
+        <?php if( $this->helper('wishlist')->isAllow() || $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($_product)): ?>
+            <?php echo $this->getChildHtml('addto') ?>
+        <?php endif; ?>
+
+        <?php if ($this->canEmailToFriend()): ?>
+        <a href="<?php echo $this->helper('catalog/product')->getEmailToFriendUrl($_product) ?>"><?php echo $this->__('Email to a Friend') ?></a>
+        <?php endif; ?>                    
+    </div><?php */?>
+    <div class="addthisbuttons">
+        <!-- AddThis Button BEGIN -->
+        <div class="addthis_toolbox addthis_default_style ">
+            <a class="addthis_counter addthis_bubble_style"></a>
+            <a class="addthis_button_compact"></a>
+            <a class="addthis_button_preferred_4"></a>
+            <a class="addthis_button_preferred_3"></a>
+            <a class="addthis_button_preferred_2"></a>
+            <a class="addthis_button_preferred_1"></a>        
+        </div>
+        <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-5015513b7ccde36a"></script>
+        <!-- AddThis Button END -->
+    </div>  
+</div><!-- right part 2 -->
+
+
+
+
+
+
+</div><!--right part-->
+
+           
+
+            <?php //echo $this->getReviewsSummaryHtml($_product, false, true)?>
+            <?php //echo $this->getChildHtml('alert_urls') ?>
+            <?php //echo $this->getChildHtml('product_type_data') ?>
+            <?php //echo $this->getTierPriceHtml() ?>
+            <?php //echo $this->getChildHtml('extrahint') ?>
+
+
+
+
+            <?php echo $this->getChildHtml('other');?>
+
+              
+	
+
+
+
+<div class="clear"></div>
+
+
+
+<?php /*?><div class="sixteen columns details omega">
+    
+    <?php foreach ($this->getChildGroup('detailed_info', 'getChildHtml') as $alias => $html):?>
+    
+
+                <?php if ($title = $this->getChildData($alias, 'title')):?>
+                <h2><?php echo $this->escapeHtml($title); ?></h2>
+                <?php endif;?>
+
+                    <?  $tit = explode('<h4>',$html);
+                        $tit = explode('</h4>',$tit[1]);
+                        $tit = str_replace(' ','-',$tit[0]);
+                        //echo $tit;
+                if($tit == 'Details'){
+                    echo $html;
+                }
+
+               
+    endforeach;?>
+
+    
+    <?php echo $this->getChildHtml('upsell_products') ?>
+    <?php echo $this->getChildHtml('RelatedProd') ?>
+    
+</div>
+<?php */?>
+
+
+<!--===========================-->
+<!--======== Scripts ==========-->
+<!--===========================-->
+
+    <script type="text/javascript">
+    //<![CDATA[
+        var productAddToCartForm = new VarienForm('product_addtocart_form');
+        productAddToCartForm.submit = function(button, url) {
+            if (this.validator.validate()) {
+                var form = this.form;
+                var oldUrl = form.action;
+
+                if (url) {
+                   form.action = url;
+                }
+                var e = null;
+                try {
+                    this.form.submit();
+                } catch (e) {
+                }
+                this.form.action = oldUrl;
+                if (e) {
+                    throw e;
+                }
+
+                if (button && button != 'undefined') {
+                    button.disabled = true;
+                }
+            }
+        }.bind(productAddToCartForm);
+
+        productAddToCartForm.submitLight = function(button, url){
+            if(this.validator) {
+                var nv = Validation.methods;
+                delete Validation.methods['required'];
+                delete Validation.methods['required-entry'];
+                delete Validation.methods['validate-one-required'];
+                delete Validation.methods['validate-one-required-by-name'];
+                // Remove custom datetime validators
+                for (var methodName in Validation.methods) {
+                    if (methodName.match(/^validate-datetime-.*/i)) {
+                        delete Validation.methods[methodName];
+                    }
+                }
+
+                if (this.validator.validate()) {
+                    if (url) {
+                        this.form.action = url;
+                    }
+                    this.form.submit();
+                }
+                Object.extend(Validation.methods, nv);
+            }
+        }.bind(productAddToCartForm);
+    //]]>
+    </script>
+
+<?php  }  ?>
