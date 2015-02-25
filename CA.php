@@ -39,6 +39,7 @@ foreach ($orderOptions as $_option) {
 if($_option['value']=='Blackberry Z10'){$device="Blackberry Z10"; break;}
 if($_option['value']=='Blackberry Q10'){$device="Blackberry Q10"; break;}
 if($_option['value']=='Blackberry Z30'){$device="Blackberry Z30"; break;}
+if($_option['value']=='Blackberry Classic'){$device="Blackberry Classic"; break;}
 
 } 
 }
